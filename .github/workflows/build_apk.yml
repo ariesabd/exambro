@@ -82,7 +82,7 @@ jobs:
           EOF
 
           # Ganti Nama Aplikasi yang muncul di HP
-          sed -i 's/android:label=".*"/android:label="ExamBrowser"/' android/app/src/main/AndroidManifest.xml
+          sed -i 's/android:label=".*"/android:label="Xambro"/' android/app/src/main/AndroidManifest.xml
 
           # Tambahkan Izin Kamera untuk Scan QR
           sed -i '/<application/i \    <uses-permission android:name="android.permission.CAMERA" />' android/app/src/main/AndroidManifest.xml
@@ -138,9 +138,13 @@ jobs:
             new_name=$(echo "$f" | sed -e 's/app-/Xambro-/' -e 's/-release//')
             mv "$f" "$new_name"
           done
+          # Copy panduan instalasi ke folder output agar ikut ter-package ke dalam zip
+          cp ../../../../BACA_SEBELUM_INSTAL.txt .
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
           name: Xambro-APK
-          path: build/app/outputs/flutter-apk/Xambro-*.apk
+          path: |
+            build/app/outputs/flutter-apk/Xambro-*.apk
+            build/app/outputs/flutter-apk/BACA_SEBELUM_INSTAL.txt

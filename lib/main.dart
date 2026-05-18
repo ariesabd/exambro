@@ -309,8 +309,7 @@ class _ExamBrowserFinalState extends State<ExamBrowserFinal> with WidgetsBinding
     return PopScope(
       canPop: false,
       onPopInvokedWithResult: (didPop, result) {
-        if (didPop) return;
-        _showExitDialog();
+        // Tombol kembali (Back) fisik diabaikan sepenuhnya agar siswa tetap fokus pada ujian
       },
       child: Scaffold(
         backgroundColor: Colors.black,

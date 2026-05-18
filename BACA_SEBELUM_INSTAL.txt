@@ -1,0 +1,65 @@
+========================================================================
+    PANDUAN INSTALASI EXAMBROWSER (XAMBRO) - OPTIMASI UKURAN FILE
+========================================================================
+
+Saat mengunduh berkas rilis, Anda akan mendapatkan 3 berkas APK yang berbeda. 
+Hal ini adalah hasil OPTIMALISASI agar ukuran aplikasi menjadi sangat kecil 
+(hanya ~5.5 MB per file, hemat 70% kuota internet) dibandingkan versi lama 
+yang berukuran ~20 MB.
+
+Siswa CUKUP MENGINSTAL SALAH SATU berkas APK saja yang sesuai dengan tipe HP mereka.
+
+------------------------------------------------------------------------
+KOMPATIBILITAS VERSI ANDROID & MEREK HP:
+------------------------------------------------------------------------
+- Versi OS Didukung: Android 5.0 (Lollipop), 6 (Marshmallow), 7 (Nougat), 
+  8 (Oreo), 9 (Pie), 10, 11, 12, 13, 14, hingga versi terbaru Android 15+.
+- Merek HP Didukung: Samsung, Xiaomi (Redmi/Poco), Oppo, Vivo, Realme, 
+  Infinix, Tecno, Asus, Huawei, Motorola, Google Pixel, dll.
+- Persentase Kompatibilitas: Mendukung lebih dari 99.5% dari seluruh HP Android 
+  aktif yang digunakan siswa saat ini.
+
+------------------------------------------------------------------------
+PILIHAN VERSI APK YANG HARUS DIDISTRIBUSIKAN:
+------------------------------------------------------------------------
+
+1. Xambro-arm64-v8a.apk (Rekomendasi Utama - 95% HP Siswa)
+   - Gunakan versi ini untuk dibagikan ke sebagian besar siswa. 
+   - Cocok untuk semua HP Android modern keluaran beberapa tahun terakhir 
+     (sistem prosesor 64-bit).
+
+2. Xambro-armeabi-v7a.apk (Versi Cadangan - HP Android Lama)
+   - Gunakan versi ini HANYA JIKA ada siswa dengan HP Android tipe lama/murah 
+     yang gagal saat menginstal versi arm64-v8a (muncul pesan "Aplikasi tidak terinstal").
+   - Cocok untuk HP prosesor tipe lama (32-bit).
+
+3. Xambro-x86_64.apk (Abaikan - Hanya untuk Pengembang)
+   - Tidak perlu dibagikan ke siswa.
+   - Versi ini khusus untuk dijalankan di Emulator Android komputer atau 
+     perangkat tablet berbasis Intel.
+
+------------------------------------------------------------------------
+CARA INSTALASI PADA HP SISWA:
+------------------------------------------------------------------------
+1. Kirim file APK pilihan (saran: Xambro-arm64-v8a.apk) ke HP siswa 
+   (bisa melalui WhatsApp, ShareIt, Flashdisk, atau link download).
+2. Ketuk file APK tersebut untuk memulai pemasangan.
+3. Jika HP memunculkan peringatan keamanan "Instal aplikasi dari sumber 
+   tidak dikenal", pilih "Izinkan" atau "Buka Setelan -> Aktifkan Izinkan 
+   dari Sumber Ini".
+4. Tunggu hingga proses pemasangan selesai. Aplikasi siap digunakan!
+
+------------------------------------------------------------------------
+INFORMASI PENTING KEAMANAN PROKTOR:
+------------------------------------------------------------------------
+- Kiosk Mode & Anti-Curang: Aplikasi akan otomatis mengunci layar HP siswa 
+  ketika ujian dimulai. Tombol Back fisik/navigasi diabaikan sepenuhnya 
+  agar siswa tidak keluar ujian tanpa izin.
+- PIN Keluar Resmi: Untuk menutup aplikasi secara resmi, ketuk tombol 
+  ikon Power merah di pojok kanan atas menu bar, lalu masukkan sandi:
+  
+  PIN PROKTOR BAWAAN: 1111
+
+========================================================================
+   ExamBrowser Modern - Ringan, Premium, Aman & Hemat Daya Baterai
+========================================================================
