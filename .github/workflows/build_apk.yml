@@ -1,0 +1,146 @@
+name: Build ExamBrowser APK
+
+on:
+  push:
+    branches: [ "main", "master" ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'zulu'
+          java-version: '17'
+
+      - name: Install Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: 'stable'
+
+      - name: Setup Project
+        run: |
+          # Melengkapi struktur folder Flutter di server
+          flutter create . --platforms android
+          
+          # Tanam Fitur Anti-Screenshot & Force Volume ke Jantung Android (MainActivity)
+          cat <<EOF > android/app/src/main/kotlin/com/example/exambrowser/MainActivity.kt
+          package com.example.exambrowser
+          import android.view.WindowManager
+          import android.media.AudioManager
+          import android.content.Context
+          import io.flutter.embedding.android.FlutterActivity
+          import io.flutter.embedding.engine.FlutterEngine
+          import io.flutter.plugin.common.MethodChannel
+          class MainActivity: FlutterActivity() {
+              private val CHANNEL = "com.example.exambrowser/volume"
+              override fun configureFlutterEngine(flutterEngine: FlutterEngine) {
+                  window.addFlags(WindowManager.LayoutParams.FLAG_SECURE)
+                  super.configureFlutterEngine(flutterEngine)
+                  MethodChannel(flutterEngine.dartExecutor.binaryMessenger, CHANNEL).setMethodCallHandler { call, result ->
+                      when (call.method) {
+                          "maximizeVolume" -> {
+                              try {
+                                  val audioManager = getSystemService(Context.AUDIO_SERVICE) as AudioManager
+                                  // Maksimalkan Volume Alarm
+                                  val maxAlarm = audioManager.getStreamMaxVolume(AudioManager.STREAM_ALARM)
+                                  audioManager.setStreamVolume(AudioManager.STREAM_ALARM, maxAlarm, 0)
+                                  // Maksimalkan Volume Media/Musik
+                                  val maxMusic = audioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC)
+                                  audioManager.setStreamVolume(AudioManager.STREAM_MUSIC, maxMusic, 0)
+                                  result.success(true)
+                              } catch (e: Exception) {
+                                  result.error("UNAVAILABLE", "Could not change volume", e.message)
+                              }
+                          }
+                          "getBatteryLevel" -> {
+                              try {
+                                  val batteryLevel: Int
+                                  if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
+                                      val batteryManager = getSystemService(Context.BATTERY_SERVICE) as android.os.BatteryManager
+                                      batteryLevel = batteryManager.getIntProperty(android.os.BatteryManager.BATTERY_PROPERTY_CAPACITY)
+                                  } else {
+                                      val intent = android.content.ContextWrapper(applicationContext).registerReceiver(null, android.content.IntentFilter(android.content.Intent.ACTION_BATTERY_CHANGED))
+                                      val level = intent?.getIntExtra(android.os.BatteryManager.EXTRA_LEVEL, -1) ?: -1
+                                      val scale = intent?.getIntExtra(android.os.BatteryManager.EXTRA_SCALE, -1) ?: -1
+                                      batteryLevel = if (level != -1 && scale != -1) (level * 100 / scale) else -1
+                                  }
+                                  result.success(batteryLevel)
+                              } catch (e: Exception) {
+                                  result.error("UNAVAILABLE", "Could not get battery level", e.message)
+                              }
+                          }
+                          else -> result.notImplemented()
+                      }
+                  }
+              }
+          }
+          EOF
+
+          # Ganti Nama Aplikasi yang muncul di HP
+          sed -i 's/android:label=".*"/android:label="ExamBrowser"/' android/app/src/main/AndroidManifest.xml
+
+          # Tambahkan Izin Kamera untuk Scan QR
+          sed -i '/<application/i \    <uses-permission android:name="android.permission.CAMERA" />' android/app/src/main/AndroidManifest.xml
+
+          # Memastikan versi SDK sesuai untuk WebView
+          if [ -f android/app/build.gradle.kts ]; then
+            sed -i 's/minSdk = .*/minSdk = 21/' android/app/build.gradle.kts
+            sed -i 's/JavaVersion.VERSION_17/JavaVersion.VERSION_1_8/g' android/app/build.gradle.kts
+            sed -i 's/jvmTarget = "17"/jvmTarget = "1.8"/g' android/app/build.gradle.kts
+          else
+            sed -i 's/minSdkVersion flutter.minSdkVersion/minSdkVersion 21/g' android/app/build.gradle
+          fi
+
+          # Tambahan: Paksa abaikan error perbedaan versi Java/Kotlin agar build lanjut terus
+          echo "kotlin.jvm.target.validation.mode=ignore" >> android/gradle.properties
+          
+      - name: Download Dependencies
+        run: flutter pub get
+
+      - name: Universal Plugin Patch (Namespace Fix)
+        run: |
+          # Skrip sakti untuk memperbaiki SEMUA library yang tidak punya namespace
+          find /home/runner/.pub-cache/hosted/pub.dev -name "build.gradle" | while read -r file; do
+            if ! grep -q "namespace" "$file"; then
+              # Cari nama paket dari AndroidManifest.xml
+              MANIFEST_PATH="$(dirname "$file")/src/main/AndroidManifest.xml"
+              if [ -f "$MANIFEST_PATH" ]; then
+                PACKAGE_NAME=$(grep -oP 'package="\K[^"]+' "$MANIFEST_PATH" | head -1)
+                if [ -n "$PACKAGE_NAME" ]; then
+                  echo "Patching namespace & SDK for $PACKAGE_NAME in $file"
+                  sed -i "s/android {/android {\n    namespace \"$PACKAGE_NAME\"/" "$file"
+                  
+                  # Paksa semua library pakai SDK 34 agar tidak error lStar
+                  sed -i 's/compileSdkVersion .*/compileSdkVersion 34/' "$file"
+                  sed -i 's/targetSdkVersion .*/targetSdkVersion 34/' "$file"
+                  sed -i 's/compileSdk = .*/compileSdk = 34/' "$file"
+                  sed -i 's/targetSdk = .*/targetSdk = 34/' "$file"
+                fi
+              fi
+            fi
+          done
+
+      - name: Generate App Icons
+        run: |
+          # Paksa generate ikon menggunakan logo dari assets
+          flutter pub run flutter_launcher_icons
+
+      - name: Build APK
+        run: |
+          flutter build apk --release --split-per-abi --obfuscate --split-debug-info=build/app/outputs/symbols
+          cd build/app/outputs/flutter-apk/
+          for f in app-*-release.apk; do
+            new_name=$(echo "$f" | sed -e 's/app-/Xambro-/' -e 's/-release//')
+            mv "$f" "$new_name"
+          done
+
+      - name: Upload APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: Xambro-APK
+          path: build/app/outputs/flutter-apk/Xambro-*.apk
