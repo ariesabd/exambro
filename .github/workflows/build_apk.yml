@@ -98,6 +98,14 @@ jobs:
 
           # Tambahan: Paksa abaikan error perbedaan versi Java/Kotlin agar build lanjut terus
           echo "kotlin.jvm.target.validation.mode=ignore" >> android/gradle.properties
+
+          # Fix proguard-android.txt in project's own generated android folder if present
+          find android -name "build.gradle" -o -name "build.gradle.kts" | while read -r file; do
+            if grep -q "proguard-android.txt" "$file"; then
+              echo "Patching proguard file reference in $file"
+              sed -i 's/proguard-android.txt/proguard-android-optimize.txt/g' "$file"
+            fi
+          done
           
       - name: Download Dependencies
         run: flutter pub get
@@ -106,6 +114,12 @@ jobs:
         run: |
           # Skrip sakti untuk memperbaiki SEMUA library yang tidak punya namespace
           find /home/runner/.pub-cache/hosted/pub.dev -name "build.gradle" | while read -r file; do
+            # Fix proguard-android.txt deprecation error in AGP 8+
+            if grep -q "proguard-android.txt" "$file"; then
+              echo "Patching proguard file reference in $file"
+              sed -i 's/proguard-android.txt/proguard-android-optimize.txt/g' "$file"
+            fi
+
             if ! grep -q "namespace" "$file"; then
               # Cari nama paket dari AndroidManifest.xml
               MANIFEST_PATH="$(dirname "$file")/src/main/AndroidManifest.xml"
