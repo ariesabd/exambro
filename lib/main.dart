@@ -31,6 +31,7 @@ class _ExamBrowserFinalState extends State<ExamBrowserFinal> with WidgetsBinding
 
   bool _isExitingLegally = false;
   bool _isViolationReported = false;
+  bool _appInitiallyResumed = false;
 
   Future<void> _maximizeVolume() async {
     try {
@@ -225,7 +226,8 @@ class _ExamBrowserFinalState extends State<ExamBrowserFinal> with WidgetsBinding
   void didChangeAppLifecycleState(AppLifecycleState state) {
     if (state == AppLifecycleState.resumed) {
       _isViolationReported = false;
-    } else if ((state == AppLifecycleState.paused || state == AppLifecycleState.inactive) && isUrlSet && !_isExitingLegally) {
+      _appInitiallyResumed = true;
+    } else if ((state == AppLifecycleState.paused || state == AppLifecycleState.inactive) && isUrlSet && !_isExitingLegally && _appInitiallyResumed) {
       _reportViolation("Aplikasi ditinggalkan");
     }
   }
