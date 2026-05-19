@@ -29,6 +29,9 @@ class _ExamBrowserFinalState extends State<ExamBrowserFinal> with WidgetsBinding
   InAppWebViewController? webViewController;
   static const platform = MethodChannel('com.example.exambrowser/volume');
 
+  bool _isExitingLegally = false;
+  bool _isViolationReported = false;
+
   Future<void> _maximizeVolume() async {
     try {
       await platform.invokeMethod('maximizeVolume');
@@ -40,7 +43,7 @@ class _ExamBrowserFinalState extends State<ExamBrowserFinal> with WidgetsBinding
   // KONFIGURASI APLIKASI (APP CONFIG)
   // ==========================================
   // 1. Password/PIN Otoritas Proktor untuk keluar/ganti link
-  final String exitPassword = "1111";
+  final String exitPassword = "12345";
 
   // 2. Judul Utama Aplikasi
   final String appTitle = "EXAM BROWSER";
@@ -55,7 +58,7 @@ class _ExamBrowserFinalState extends State<ExamBrowserFinal> with WidgetsBinding
   // 5. LINK TANAM (EMBEDDED URL)
   // - Masukkan URL server ujian CBT Anda di bawah ini (contoh: "http://192.168.1.100/").
   // - Jika dikosongkan "", aplikasi akan masuk ke mode Scan QR & Input Manual.
-  final String embeddedUrl = "https://mgmp.anbk.my.id/"; 
+  final String embeddedUrl = "https://cbt-mtswalisongo.my.id/"; 
   // ==========================================
   
   final AudioPlayer audioPlayer = AudioPlayer();
@@ -220,12 +223,17 @@ class _ExamBrowserFinalState extends State<ExamBrowserFinal> with WidgetsBinding
 
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
-    if (state == AppLifecycleState.paused && isUrlSet) {
+    if (state == AppLifecycleState.resumed) {
+      _isViolationReported = false;
+    } else if ((state == AppLifecycleState.paused || state == AppLifecycleState.inactive) && isUrlSet && !_isExitingLegally) {
       _reportViolation("Aplikasi ditinggalkan");
     }
   }
 
   void _reportViolation(String type) async {
+    if (_isViolationReported) return;
+    _isViolationReported = true;
+
     await _maximizeVolume();
     audioPlayer.play(AssetSource('alert.mp3'), volume: 1.0);
     webViewController?.evaluateJavascript(
@@ -262,6 +270,9 @@ class _ExamBrowserFinalState extends State<ExamBrowserFinal> with WidgetsBinding
                 if (isReset) {
                   _resetUrl();
                 } else {
+                  setState(() {
+                    _isExitingLegally = true;
+                  });
                   stopKioskMode().then((_) => SystemNavigator.pop());
                 }
               } else {
