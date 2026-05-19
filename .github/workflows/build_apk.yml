@@ -112,12 +112,25 @@ jobs:
 
       - name: Universal Plugin Patch (Namespace Fix)
         run: |
-          # Skrip sakti untuk memperbaiki SEMUA library yang tidak punya namespace
+          # Skrip sakti untuk memperbaiki SEMUA library yang tidak punya namespace dan memaksa SDK 34
           find /home/runner/.pub-cache/hosted/pub.dev -name "build.gradle" | while read -r file; do
             # Fix proguard-android.txt deprecation error in AGP 8+
             if grep -q "proguard-android.txt" "$file"; then
               echo "Patching proguard file reference in $file"
               sed -i 's/proguard-android.txt/proguard-android-optimize.txt/g' "$file"
+            fi
+
+            # Paksa semua library pakai SDK 34 agar tidak error checkReleaseAarMetadata
+            if grep -q "compileSdkVersion" "$file" || grep -q "compileSdk" "$file"; then
+              echo "Patching compileSdk to 34 in $file"
+              sed -i 's/compileSdkVersion .*/compileSdkVersion 34/g' "$file"
+              sed -i 's/compileSdk .*/compileSdk 34/g' "$file"
+              sed -i 's/compileSdk = .*/compileSdk = 34/g' "$file"
+            fi
+            if grep -q "targetSdkVersion" "$file" || grep -q "targetSdk" "$file"; then
+              sed -i 's/targetSdkVersion .*/targetSdkVersion 34/g' "$file"
+              sed -i 's/targetSdk .*/targetSdk 34/g' "$file"
+              sed -i 's/targetSdk = .*/targetSdk = 34/g' "$file"
             fi
 
             if ! grep -q "namespace" "$file"; then
@@ -126,14 +139,8 @@ jobs:
               if [ -f "$MANIFEST_PATH" ]; then
                 PACKAGE_NAME=$(grep -oP 'package="\K[^"]+' "$MANIFEST_PATH" | head -1)
                 if [ -n "$PACKAGE_NAME" ]; then
-                  echo "Patching namespace & SDK for $PACKAGE_NAME in $file"
+                  echo "Patching namespace for $PACKAGE_NAME in $file"
                   sed -i "s/android {/android {\n    namespace \"$PACKAGE_NAME\"/" "$file"
-                  
-                  # Paksa semua library pakai SDK 34 agar tidak error lStar
-                  sed -i 's/compileSdkVersion .*/compileSdkVersion 34/' "$file"
-                  sed -i 's/targetSdkVersion .*/targetSdkVersion 34/' "$file"
-                  sed -i 's/compileSdk = .*/compileSdk = 34/' "$file"
-                  sed -i 's/targetSdk = .*/targetSdk = 34/' "$file"
                 fi
               fi
             fi
