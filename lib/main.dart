@@ -227,7 +227,7 @@ class _ExamBrowserFinalState extends State<ExamBrowserFinal> with WidgetsBinding
     if (state == AppLifecycleState.resumed) {
       _isViolationReported = false;
       _appInitiallyResumed = true;
-    } else if ((state == AppLifecycleState.paused || state == AppLifecycleState.inactive) && isUrlSet && !_isExitingLegally && _appInitiallyResumed) {
+    } else if (state == AppLifecycleState.paused && isUrlSet && !_isExitingLegally && _appInitiallyResumed) {
       _reportViolation("Aplikasi ditinggalkan");
     }
   }
@@ -244,6 +244,10 @@ class _ExamBrowserFinalState extends State<ExamBrowserFinal> with WidgetsBinding
   }
 
   void _showExitDialog({bool isReset = false}) {
+    // Bunyikan alarm langsung saat tombol keluar diklik
+    _maximizeVolume();
+    audioPlayer.play(AssetSource('alert.mp3'), volume: 1.0);
+
     final TextEditingController _passController = TextEditingController();
     showDialog(
       context: context,
@@ -264,10 +268,17 @@ class _ExamBrowserFinalState extends State<ExamBrowserFinal> with WidgetsBinding
           ],
         ),
         actions: [
-          TextButton(onPressed: () => Navigator.pop(context), child: const Text('BATAL')),
+          TextButton(
+            onPressed: () {
+              audioPlayer.stop(); // Hentikan alarm jika batal
+              Navigator.pop(context);
+            },
+            child: const Text('BATAL'),
+          ),
           ElevatedButton(
             onPressed: () {
               if (_passController.text == exitPassword) {
+                audioPlayer.stop(); // Hentikan alarm jika password benar
                 Navigator.pop(context);
                 if (isReset) {
                   _resetUrl();
