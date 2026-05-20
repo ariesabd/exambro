@@ -44,7 +44,7 @@ class _ExamBrowserFinalState extends State<ExamBrowserFinal> with WidgetsBinding
   // KONFIGURASI APLIKASI (APP CONFIG)
   // ==========================================
   // 1. Password/PIN Otoritas Proktor untuk keluar/ganti link
-  final String exitPassword = "12345";
+  final String exitPassword = "7777";
 
   // 2. Judul Utama Aplikasi
   final String appTitle = "EXAM BROWSER";
@@ -59,7 +59,7 @@ class _ExamBrowserFinalState extends State<ExamBrowserFinal> with WidgetsBinding
   // 5. LINK TANAM (EMBEDDED URL)
   // - Masukkan URL server ujian CBT Anda di bawah ini (contoh: "http://192.168.1.100/").
   // - Jika dikosongkan "", aplikasi akan masuk ke mode Scan QR & Input Manual.
-  final String embeddedUrl = "https://cbt-mtswalisongo.my.id/"; 
+  final String embeddedUrl = "https://x.madafa.sch.id/?examkey=um"; 
   // ==========================================
   
   final AudioPlayer audioPlayer = AudioPlayer();
@@ -411,7 +411,12 @@ class _ExamBrowserFinalState extends State<ExamBrowserFinal> with WidgetsBinding
                       initialUrlRequest: URLRequest(url: WebUri(currentUrl)),
                       initialSettings: InAppWebViewSettings(
                         userAgent: customUserAgent.isNotEmpty ? customUserAgent : null,
-                        useShouldOverrideUrlLoading: true,
+                        useShouldOverrideUrlLoading: false, // Di-disable karena tidak ada callback override yang diimplementasikan (mencegah halaman blank/macet saat redirect login)
+                        javaScriptEnabled: true, // Memastikan JavaScript aktif
+                        domStorageEnabled: true, // Mengaktifkan LocalStorage/SessionStorage (sangat krusial untuk login modern)
+                        databaseEnabled: true, // Mengaktifkan database/WebSQL storage
+                        mixedContentMode: MixedContentMode.MIXED_CONTENT_ALWAYS_ALLOW, // Mengizinkan resource HTTP di halaman HTTPS (sangat sering terjadi di sistem CBT sekolah)
+                        javaScriptCanOpenWindowsAutomatically: true, // Mengizinkan redirect otomatis lewat JavaScript window.open
                         mediaPlaybackRequiresUserGesture: false,
                         allowsInlineMediaPlayback: true,
                         cacheEnabled: false,

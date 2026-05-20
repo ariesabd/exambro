@@ -1,14 +1,3 @@
-========================================================================
-    PANDUAN INSTALASI EXAMBROWSER (XAMBRO) - OPTIMASI UKURAN FILE
-========================================================================
-
-Saat mengunduh berkas rilis, Anda akan mendapatkan 3 berkas APK yang berbeda. 
-Hal ini adalah hasil OPTIMALISASI agar ukuran aplikasi menjadi sangat kecil 
-(hanya ~5.5 MB per file, hemat 70% kuota internet) dibandingkan versi lama 
-yang berukuran ~20 MB.
-
-Siswa CUKUP MENGINSTAL SALAH SATU berkas APK saja yang sesuai dengan tipe HP mereka.
-
 ------------------------------------------------------------------------
 KOMPATIBILITAS VERSI ANDROID & MEREK HP:
 ------------------------------------------------------------------------
@@ -33,11 +22,6 @@ PILIHAN VERSI APK YANG HARUS DIDISTRIBUSIKAN:
      yang gagal saat menginstal versi arm64-v8a (muncul pesan "Aplikasi tidak terinstal").
    - Cocok untuk HP prosesor tipe lama (32-bit).
 
-3. Xambro-x86_64.apk (Abaikan - Hanya untuk Pengembang)
-   - Tidak perlu dibagikan ke siswa.
-   - Versi ini khusus untuk dijalankan di Emulator Android komputer atau 
-     perangkat tablet berbasis Intel.
-
 ------------------------------------------------------------------------
 CARA INSTALASI PADA HP SISWA:
 ------------------------------------------------------------------------
@@ -52,13 +36,10 @@ CARA INSTALASI PADA HP SISWA:
 ------------------------------------------------------------------------
 INFORMASI PENTING KEAMANAN PROKTOR:
 ------------------------------------------------------------------------
-- Kiosk Mode & Anti-Curang: Aplikasi akan otomatis mengunci layar HP siswa 
-  ketika ujian dimulai. Tombol Back fisik/navigasi diabaikan sepenuhnya 
-  agar siswa tidak keluar ujian tanpa izin.
 - PIN Keluar Resmi: Untuk menutup aplikasi secara resmi, ketuk tombol 
   ikon Power merah di pojok kanan atas menu bar, lalu masukkan sandi:
   
-  PIN PROKTOR BAWAAN: 1111
+  PIN PROKTOR BAWAAN: 7777
 
 ========================================================================
    ExamBrowser Modern - Ringan, Premium, Aman & Hemat Daya Baterai
