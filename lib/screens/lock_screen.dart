@@ -108,12 +108,12 @@ class _LockScreenState extends State<LockScreen> with SingleTickerProviderStateM
       decoration: BoxDecoration(
         color: _isError
             ? Colors.redAccent
-            : (isActive ? Colors.emerald : Colors.white.withOpacity(0.2)),
+            : (isActive ? const Color(0xFF10B981) : Colors.white.withOpacity(0.2)),
         shape: BoxShape.circle,
         boxShadow: isActive && !_isError
             ? [
                 BoxShadow(
-                  color: Colors.emerald.withOpacity(0.5),
+                  color: const Color(0xFF10B981).withOpacity(0.5),
                   blurRadius: 8,
                   spreadRadius: 2,
                 )

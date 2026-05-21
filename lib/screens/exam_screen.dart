@@ -103,7 +103,7 @@ class _ExamScreenState extends State<ExamScreen> {
             if (_isLoading)
               LinearProgressIndicator(
                 value: _progress,
-                color: Colors.emerald,
+                color: const Color(0xFF10B981),
                 backgroundColor: const Color(0xFF1E1B29),
                 minHeight: 3.5,
               ),

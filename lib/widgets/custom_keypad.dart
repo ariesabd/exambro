@@ -115,7 +115,7 @@ class CustomKeypad extends StatelessWidget {
                 showSubmit
                     ? const Icon(
                         Icons.check_circle,
-                        color: Colors.emerald,
+                        color: Color(0xFF10B981),
                         size: 38,
                       )
                     : const SizedBox.shrink(),

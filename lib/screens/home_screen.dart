@@ -273,7 +273,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           child: const Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              Icon(Icons.qr_code_scanner, color: Colors.emerald, size: 22),
+                              Icon(Icons.qr_code_scanner, color: const Color(0xFF10B981), size: 22),
                               SizedBox(width: 8),
                               Text(
                                 'PINDAI QR CODE',
@@ -345,13 +345,16 @@ class _QRScannerScreenState extends State<QRScannerScreen> {
         actions: [
           IconButton(
             icon: ValueListenableBuilder(
-              valueListenable: _scannerController.torchState,
+              valueListenable: _scannerController,
               builder: (context, state, child) {
-                switch (state) {
+                final torchState = state.torchState;
+                switch (torchState) {
                   case TorchState.off:
                     return const Icon(Icons.flash_off, color: Colors.grey);
                   case TorchState.on:
                     return const Icon(Icons.flash_on, color: Colors.amber);
+                  default:
+                    return const Icon(Icons.flash_off, color: Colors.grey);
                 }
               },
             ),
@@ -389,7 +392,7 @@ class _QRScannerScreenState extends State<QRScannerScreen> {
               width: 260,
               height: 260,
               decoration: BoxDecoration(
-                border: Border.all(color: Colors.emerald, width: 3),
+                border: Border.all(color: const Color(0xFF10B981), width: 3),
                 borderRadius: BorderRadius.circular(16),
               ),
             ),
