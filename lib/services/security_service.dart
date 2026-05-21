@@ -1,17 +1,15 @@
 import 'dart:io';
 import 'package:flutter/services.dart';
-import 'package:flutter_windowmanager/flutter_windowmanager.dart';
+import 'package:screen_protector/screen_protector.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class SecurityService {
   static const String _lockKey = 'exambro_app_locked';
 
-  /// Mencegah screenshot & screen recording (FLAG_SECURE) di Android
+  /// Mencegah screenshot & screen recording (FLAG_SECURE) di Android & iOS
   static Future<void> preventScreenshots() async {
     try {
-      if (Platform.isAndroid) {
-        await FlutterWindowManager.addFlags(FlutterWindowManager.FLAG_SECURE);
-      }
+      await ScreenProtector.preventScreenshotOn();
     } catch (e) {
       // Abaikan jika tidak didukung atau terjadi error saat inisialisasi awal
       print("Error preventing screenshots: $e");
@@ -21,9 +19,7 @@ class SecurityService {
   /// Memperbolehkan kembali screenshot (jika diperlukan)
   static Future<void> allowScreenshots() async {
     try {
-      if (Platform.isAndroid) {
-        await FlutterWindowManager.clearFlags(FlutterWindowManager.FLAG_SECURE);
-      }
+      await ScreenProtector.preventScreenshotOff();
     } catch (e) {
       print("Error allowing screenshots: $e");
     }

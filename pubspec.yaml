@@ -18,7 +18,8 @@ dependencies:
   kiosk_mode: ^0.3.0
   audioplayers: ^5.2.1
   audio_session: ^0.1.16
-  flutter_windowmanager: ^0.2.0
+  screen_protector: ^1.5.1
+
 
 dev_dependencies:
   flutter_test:
