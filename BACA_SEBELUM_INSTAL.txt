@@ -34,6 +34,21 @@ CARA INSTALASI PADA HP SISWA:
 4. Tunggu hingga proses pemasangan selesai. Aplikasi siap digunakan!
 
 ------------------------------------------------------------------------
+CARA PENGGUNAAN PADA LAPTOP WINDOWS (PC):
+------------------------------------------------------------------------
+1. Bagikan file "exambro_windows.exe" hasil compile ke laptop siswa
+   (bisa dikirim melalui Flashdisk, Google Drive, atau jaringan lokal).
+2. Siswa cukup klik ganda (double-click) pada file "exambro_windows.exe" 
+   tersebut untuk langsung memulai ujian.
+3. Aplikasi akan mengunci layar secara penuh (Full Screen) dan berada di 
+   paling atas untuk mencegah siswa membuka browser lain atau mencontek.
+4. Klik kanan, klik tombol escape, refresh, dan menu pintasan lainnya 
+   dinonaktifkan demi keamanan tingkat tinggi.
+5. Untuk keluar dari aplikasi, siswa atau proktor dapat menekan tombol 
+   "✕ Keluar" di pojok kanan atas atau menekan tombol Alt + F4, lalu 
+   masukkan PIN Keamanan proktor.
+
+------------------------------------------------------------------------
 INFORMASI PENTING KEAMANAN PROKTOR:
 ------------------------------------------------------------------------
 - PIN Keluar Resmi: Untuk menutup aplikasi secara resmi, ketuk tombol 
